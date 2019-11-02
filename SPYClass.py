@@ -15,24 +15,10 @@ token = util.prompt_for_user_token(
 sp = spotipy.Spotify(auth=token)
 
 class APISFY(SPYAbs.SFYSERVICE):
-    def searchTracks(self, song, artist):
-        if token:
-            sp.trace = False
-            results = sp.search(q='artist:' + artist + ' track:' + song,limit=1)
-            print(results)
-            if results != None:
-                for track in results['tracks']['items']:
-                    print(track['name'] + ' - ' + track['artists'][0]['name'])
-                return track['id']
-            else:
-                print("Ningun resultado en la busqueda")
-
-
-    def get_track_info(self, song,artist):
+    def get_track_info(song, artist):
         if token:
             sp.trace = False
             results = sp.search(q='artist:' + artist + ' track:' + song)
-            print(results)
             for track in results['tracks']['items']:
 
                 id_track = track['id']
@@ -47,29 +33,36 @@ class APISFY(SPYAbs.SFYSERVICE):
             print("Can't get token for", token)
 
 
-
 class DBSFY(DBAbs.DBService):
     def __init__(self, archivo):
         self.con = sqlite3.connect(archivo)
         self.cur = self.con.cursor()
 
-    def saveTrack(self, Track):
-        self.cur.execute("INSERT INTO Track VALUES "
-                         "('{}','{}','{}','{}','{}')".format(Track.uri_track,Track.name,Track.artist,Track.album,Track.duration))
+    def saveTrack(self, library):
+        for item in library['items']:
+            song = item['track']
+
+            iD = song['id']
+            name = song['name']
+            artist = song['artists'][0]['name']
+            album = song['album']['name']
+            duration = song['duration_ms']
+
+            self.cur.execute("INSERT INTO Track VALUES "
+                             "('{}','{}','{}','{}','{}')".format(iD, name,artist, album,
+                                                                 duration))
+        self.con.commit()
 
     def deleteTrack(self, name):
         self.cur.execute("DELETE FROM Track WHERE Name = ?",(name,))
         self.con.commit()
-        return ("Track Eliminado")
+        print("Track Eliminado")
 
-    def mostrarTracks(self):
-        showTracks = self.cur.execute("SELECT * from Track").fetchall()
+    def showTracks(self):
+        exc = self.cur.execute("SELECT DISTINCT Name, Artist from Track").fetchall()
 
-        tracks = []
-        i = 0
-        for t in showTracks:
-            tracks.append(Track(t[0], t[1], t[2], t[3], t[4]))
-            i+=1
+        for c in exc:
+            print(c[0] + ' - ' + c[1])
 
-        return tracks
+        self.con.commit()
 

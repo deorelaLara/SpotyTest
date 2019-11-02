@@ -2,5 +2,5 @@ from abc import ABC, abstractmethod
 
 class SFYSERVICE(ABC):
     @abstractmethod
-    def buscarNombre(self, trackName, artist):
+    def get_track_info(self, trackName, artist):
         pass
