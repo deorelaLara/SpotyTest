@@ -1,6 +1,4 @@
 import sqlite3
-import SPYAbs
-import DBAbs
 import spotipy
 import spotipy.util as util
 from Track import Track
@@ -14,6 +12,7 @@ token = util.prompt_for_user_token(
 
 sp = spotipy.Spotify(auth=token)
 
+
 class APISFY():
     def get_track_info(self, song,artist):
         if token:
@@ -23,7 +22,6 @@ class APISFY():
             if len(results['tracks']['items'])!=0:
                 #print(results)
                 for track in results['tracks']['items']:
-
                     id_track = track['id']
                     name = track['name']
                     artist = track['artists'][0]['name']
@@ -33,7 +31,6 @@ class APISFY():
                 return objectTrack
             return ("Can't find the song")
         return("Can't get token for", token)
-
 
 
 class DBSFY():
@@ -53,6 +50,7 @@ class DBSFY():
         except:
             print("Error en constructor")
 
+
     def saveTrack(self, Track):
         #Primero revisemos los elementos de track,la estructurra del objeto track y las conexiones
         # print ("[DEBUG 'Track.uri_track'] ",Track.uri_track)
@@ -66,24 +64,24 @@ class DBSFY():
             return 1
         for x in Track.uri_track:
             if not (x.isnumeric() or x.isalpha()):#okeyahora valida que no inyecten
-                return 1 #cambiaresto por algo usando regex
+                return 1 #usando regex (pendiente)
         #validar name
         if (not isinstance(Track.name, str)) or Track.name==None or Track.name==" " or (0>=len(Track.name)>50):
             print("Error en name ", Track.name)
             return 1
-        #aqui es la validacion de caracteres maliciosos y sql iny.
+        #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente)
 
         # #validar artista
         if (not isinstance(Track.artist, str)) or Track.artist==None or Track.artist==" " or (0>=len(Track.artist)>50):
             print("Error en artist ", Track.artist)
             return 1
-        #aqui es la validacion de caracteres maliciosos y sql iny.
+        #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente, tambien decidir si metemos las validaciones en metodos)
 
-        #validar album
+        #validar album 
         if (not isinstance(Track.album, str)) or Track.album==None or Track.album==" " or (0>=len(Track.album)>50):
             print("Error en album ", Track.album)
             return 1
-        #aqui es la validacion de caracteres maliciosos y sql iny.
+        #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente)
 
         #
         # #validar duracion
@@ -101,7 +99,7 @@ class DBSFY():
 
     def deleteTrack(self, name):
         try:
-            self.cur.execute("DELETE FROM Track WHERE Name = ?",(name,))
+            self.cur.execute("DELETE FROM Track WHERE Name = ?",name)
             return (0)
         except:
             return 1
@@ -117,3 +115,4 @@ class DBSFY():
             return tracks
         except:
             return 1
+
