@@ -83,7 +83,7 @@ class DBSFY():
         #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente, tambien decidir si metemos las validaciones en metodos)
 
         #validar album
-        if (not isinstance(Track.album, str)) or Track.album==None or Track.album==" " or Track.artist=="" or (0<=len(Track.album)>50):
+        if (not isinstance(Track.album, str)) or Track.album==None or Track.album==" " or Track.album=="" or (0<=len(Track.album)>50):
             print("Error en album ", Track.album)
             return 1
         #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente)
