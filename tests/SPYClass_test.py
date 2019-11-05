@@ -254,70 +254,138 @@ class testSpotipy(unittest.TestCase):
         # objTrack=None
         # aun falta validar mas detalles, mas casos de prueba y mejorar el codigo
 
-        # CASOS DE PRUEBA: PRUEBAS A ARITST *************************************** <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST CASES album
-        print("TEST CASE: album es ' ' ")  #**************************************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion','Gorillaz',' ', 326373)
+        # # CASOS DE PRUEBA: PRUEBAS A ALBUM *************************************** <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST CASES album
+        # print("TEST CASE: album es ' ' ")  #**************************************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion','Gorillaz',' ', 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,1) # no lo guarda
+        # objTrack=None
+        # print("TEST CASE: album es '' ")  #**************************************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion','Gorillaz','', 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,1) # no lo guarda
+        # objTrack=None
+        # print("TEST CASE: album es None ")  #**************************************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion',"Gorillaz",None, 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,1) # no lo guarda
+        # objTrack=None
+        # print("TEST CASE: album es MAYOR A 50") #**********************************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",'B'*52, 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,1) # no lo guarda
+        # objTrack=None
+        # print("TEST CASE: album tiene caracteres especiales") #*******************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare",'Gorillaz','D-Sides [Special Edition]', 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,0) # lo guarda por que aun no se ha definido esta validacion
+        # objTrack=None
+        # # # checar con int
+        # print("TEST CASE: album int como int") #*****************************************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",1234, 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,1) # no lo guarda por que acepta solo strings
+        # objTrack= None
+        # print("TEST CASE: album int como string") #***************************************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare","Gorillaz",'1234', 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,0) # lo guarda por que esta como string
+        # objTrack = None
+        # print("TEST CASE: album flaot como tal") #****************************************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",1234.5, 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,1) # no lo guarda por que acepta solo strings
+        # objTrack= None
+        # print("TEST CASE: album float como string") #***************************************************************************
+        # objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare",'Gorillaz','1234.5', 326373)
+        # objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
+        # a=objBDD.saveTrack(objTrack)
+        # print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
+        # self.assertEqual(a,0) # lo guarda por que esta como string
+        # objTrack=None
+        # # aun falta validar mas detalles, mas casos de prueba y mejorar el codigo
+
+
+        # CASOS DE PRUEBA: PRUEBAS A DURATION *************************************** <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST CASES DURATION
+        print("TEST CASE: duration es ' ' ")  #**************************************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion','Gorillaz','D-Sides [Special Edition]', ' ' )
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
         self.assertEqual(a,1) # no lo guarda
         objTrack=None
-        print("TEST CASE: album es '' ")  #**************************************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion','Gorillaz','', 326373)
+        print("TEST CASE: duration es '' ")  #**************************************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion','Gorillaz','D-Sides [Special Edition]', '')
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
         self.assertEqual(a,1) # no lo guarda
         objTrack=None
-        print("TEST CASE: album es None ")  #**************************************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion',"Gorillaz",None, 326373)
+        print("TEST CASE: duration es None ")  #**************************************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Cancion',"Gorillaz",'D-Sides [Special Edition]', None)
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
         self.assertEqual(a,1) # no lo guarda
         objTrack=None
-        print("TEST CASE: album es MAYOR A 50") #**********************************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",'B'*52, 326373)
+        print("TEST CASE: duration es string") #**********************************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",'D-Sides [Special Edition]', "Esto es una cadena")
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
         self.assertEqual(a,1) # no lo guarda
         objTrack=None
-        print("TEST CASE: album tiene caracteres especiales") #*******************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare",'Gorillaz','D-Sides [Special Edition]', 326373)
+        print("TEST CASE: duration mayor a 2147483647") #*******************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare",'Gorillaz','D-Sides [Special Edition]', 2147483647+3)
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
-        self.assertEqual(a,0) # lo guarda por que aun no se ha definido esta validacion
+        self.assertEqual(a,1) # no guarda
         objTrack=None
         # # checar con int
-        print("TEST CASE: album int como int") #*****************************************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",1234, 326373)
+        print("TEST CASE: duration es 0") #*****************************************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",'D-Sides [Special Edition]', 0)
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
         self.assertEqual(a,1) # no lo guarda por que acepta solo strings
         objTrack= None
-        print("TEST CASE: album int como string") #***************************************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare","Gorillaz",'1234', 326373)
+        print("TEST CASE: duration es negativo") #***************************************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare","Gorillaz",'D-Sides [Special Edition]', -1)
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
-        self.assertEqual(a,0) # lo guarda por que esta como string
+        self.assertEqual(a,1) # no lo guarda
         objTrack = None
-        print("TEST CASE: album flaot como tal") #****************************************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",1234.5, 326373)
+        print("TEST CASE: duration flaot") #****************************************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA','Dare',"Gorillaz",'D-Sides [Special Edition]', 326373.5)
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
         self.assertEqual(a,1) # no lo guarda por que acepta solo strings
         objTrack= None
-        print("TEST CASE: album float como string") #***************************************************************************
-        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare",'Gorillaz','1234.5', 326373)
+        print("TEST CASE: duration float como double") #***************************************************************************
+        objTrack=Mock_Track('AAAAAAAAAAAAAAAAAAAAAA',"Dare",'Gorillaz','D-Sides [Special Edition]', 326373.15)
         objBDD.cur.execute("DELETE FROM Track")#limpiamos la base de datos
         a=objBDD.saveTrack(objTrack)
         print(objTrack.uri_track, "guardado") if a==0 else print(objTrack.uri_track,"No guardado")
-        self.assertEqual(a,0) # lo guarda por que esta como string
+        self.assertEqual(a,1) # no lo guarda
         objTrack=None
         # aun falta validar mas detalles, mas casos de prueba y mejorar el codigo
 
