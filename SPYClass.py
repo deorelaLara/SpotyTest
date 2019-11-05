@@ -67,22 +67,23 @@ class DBSFY():
             print("Error en uri_track [if]", Track.uri_track)
             return 1
         for x in Track.uri_track:
-            if not (x.isnumeric() or x.isalpha()):#okeyahora valida que no inyecten
-                return 1 #usando regex (pendiente)
+            if not (x.isnumeric() or x.isalpha()):
+                print("Error en uri_track tiene caracteres especiales")
+                return 1
         #validar name
-        if (not isinstance(Track.name, str)) or Track.name==None or Track.name==" " or (0>=len(Track.name)>50):
+        if (not isinstance(Track.name, str)) or Track.name==None or Track.name==" " or (0<=len(Track.name)>50):
             print("Error en name ", Track.name)
             return 1
         #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente)
 
         # #validar artista
-        if (not isinstance(Track.artist, str)) or Track.artist==None or Track.artist==" " or (0>=len(Track.artist)>50):
+        if (not isinstance(Track.artist, str)) or Track.artist==None or Track.artist==" " or (0<=len(Track.artist)>50):
             print("Error en artist ", Track.artist)
             return 1
         #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente, tambien decidir si metemos las validaciones en metodos)
 
         #validar album
-        if (not isinstance(Track.album, str)) or Track.album==None or Track.album==" " or (0>=len(Track.album)>50):
+        if (not isinstance(Track.album, str)) or Track.album==None or Track.album==" " or (0<=len(Track.album)>50):
             print("Error en album ", Track.album)
             return 1
         #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente)
