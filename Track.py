@@ -12,7 +12,4 @@ class Track:
         if self.id != None:
             return str(f"El track es: {self.name}" +
                       f" de {self.artist}"+
-                       f" del album {self.album}"+"\n")
-        return str(f"El track es:" + "\n" + f"Name -> {self.name}"
-                       + "\n" + f"Artist -> {self.artist}" +
-                       "\n" + f"Album -> {self.album}" + "\n")
+                       f" del album {self.album}")
