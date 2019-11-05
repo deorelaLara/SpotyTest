@@ -63,7 +63,7 @@ class DBSFY():
             print("Track is null")
             return 1
 
-        if (not isinstance(Track.uri_track, str)) or Track.uri_track==" "  or Track.uri_track==None or len(Track.uri_track)==0  or len(Track.uri_track)!=22 :
+        if (not isinstance(Track.uri_track, str)) or Track.uri_track==(" " or "")  or Track.uri_track==None or len(Track.uri_track)==0  or len(Track.uri_track)!=22 :
             print("Error en uri_track [if]", Track.uri_track)
             return 1
         for x in Track.uri_track:
@@ -71,26 +71,26 @@ class DBSFY():
                 print("Error en uri_track tiene caracteres especiales")
                 return 1
         #validar name
-        if (not isinstance(Track.name, str)) or Track.name==None or Track.name==" " or (0<=len(Track.name)>50):
+        if (not isinstance(Track.name, str)) or Track.name==None or Track.name==" " or Track.name=="" or (0<=len(Track.name)>50):
             print("Error en name ", Track.name)
             return 1
         #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente)
 
         # #validar artista
-        if (not isinstance(Track.artist, str)) or Track.artist==None or Track.artist==" " or (0<=len(Track.artist)>50):
+        if (not isinstance(Track.artist, str)) or Track.artist==None or Track.artist==" " or Track.artist=="" or (0<=len(Track.artist)>50):
             print("Error en artist ", Track.artist)
             return 1
         #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente, tambien decidir si metemos las validaciones en metodos)
 
         #validar album
-        if (not isinstance(Track.album, str)) or Track.album==None or Track.album==" " or (0<=len(Track.album)>50):
+        if (not isinstance(Track.album, str)) or Track.album==None or Track.album==" " or Track.artist=="" or (0<=len(Track.album)>50):
             print("Error en album ", Track.album)
             return 1
         #aqui es la validacion de caracteres maliciosos y sql iny.(pendiente)
 
         #
         # #validar duracion
-        if (not (isinstance(Track.duration,int)) or ('.' or '-' or ',') in str(Track.duration)) or 0<=int(Track.duration)>2147483647:
+        if (not (isinstance(Track.duration,int)) or Track.duration==None or('.' or '-' or ',' or '' or ' ' or "'") in str(Track.duration)) or 0<=int(Track.duration)>2147483647:
             # duration=float(Track.duration)
             # duration=(duration/1000.00)/60.00
             # print ('float duration',duration)
