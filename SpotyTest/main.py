@@ -1,0 +1,90 @@
+
+from SPYClass import APISFY
+from SPYClass import DBSFY
+import spotipy
+from spotipy import util
+import sys
+import sqlite3
+
+token = util.prompt_for_user_token( #**************************
+    username='akralma',
+    scope='user-library-modify user-library-read',
+    client_id='3225d7bdc4e8402486b5d0ffeee3c81b', #ESTO AQUI NO
+    client_secret='1c328c97d6324ca4a3c0b9f5f4ae8f80',
+    redirect_uri='http://www.google.com') # ********************
+
+sp = spotipy.Spotify(auth=token)
+
+#Devuelve informacion del track
+def search_info(apisfy): #***************************************
+    song = input("Como se llama la rola: ")                    #*
+    artist = input('¿Quien la canta?: ')                       #+
+
+    info = apisfy.get_track_info(song, artist)                 #*
+    if song:                                   #no esto nooo
+        print(info)
+        return info                                             #*
+    else:
+        return 1#***********************************
+
+ #Guarda info en DB #*****************************
+
+def main():
+    apisfy = APISFY()
+    dbsfy =  DBSFY('Arma_tu_biblio.db')
+    library = sp.current_user_saved_tracks()
+    print('Bienvenido akralma, ¿Que quieres hacer?') #cambiar esa chingadera de abrakadabra
+    cont = False
+    while True:
+
+        option = int(input('1. Agregar track' + '\n' +
+                           '2. Ver tu biblioteca' + '\n' +
+                           '3. Borrar track' + '\n'
+                           '4. Salir' + '\n' +
+                           '5. Migrar Datos' + '\n'))
+        if option == 1:
+
+            track = search_info(APISFY)
+            print('¿Quieres agregar esta cancion a tu biblioteca?')
+            save = int(input('1. Si' + '\n' + '2. No' + '\n'))
+
+            if save == 1:
+                list_tracks.append(track.id)
+                sp.current_user_saved_tracks_add(list_tracks)  # Guarda en biblioteca
+
+                save_track(dbsfy, library) #Guarda archivo en DB
+                print('La canción ha sido agregada' + '\n')
+            elif save == 2:
+                print(option)
+
+        elif option == 2:
+            show_track(dbsfy)
+
+        elif option ==3:
+            name = input('¿Cual cancion quieres eliminar?: ' + '\n')
+            del_track(dbsfy, name)
+
+            print('¿Quieres seguir eliminando?' + '\n')
+            stop = int(input('1.Si ' + '2. No' + '\n'))
+
+            if stop == 1:
+                print(name)
+            else:
+                print(option)
+
+
+        elif option == 4:
+            break
+
+        elif option == 5:
+            library = sp.current_user_saved_tracks()
+
+
+
+        else:
+            print("Introduce una opcion valida")
+
+        sys.exit()
+
+if __name__ == '__main__':
+    main()
