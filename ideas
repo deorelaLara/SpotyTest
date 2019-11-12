@@ -1,0 +1,29 @@
+primero revisa si estan sincronizado los Datos
+
+1 traer tracks de spotify
+
+  si no tiene Datos en spotify{
+
+    revisar si tienes 
+
+      no agregues nada
+    }
+    si tiene Datos
+      vacias los datos de spotify en labase
+
+
+    si notiene datos
+
+
+  si tiene Datos
+
+
+
+
+#################################
+2 traer datos de base de Datos
+3 compararlos
+
+
+
+unittestcaja negra blanca verde

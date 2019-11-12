@@ -10,6 +10,4 @@ class Track:
 
     def __str__(self):
         if self.id != None:
-            return str(f"El track es: {self.name}" +
-                      f" de {self.artist}"+
-                       f" del album {self.album}")
+            return str(f"[{self.id}," +f" de {self.name},"+f"{self.artist},"+f" {self.album},"+f" {self.duration}]")

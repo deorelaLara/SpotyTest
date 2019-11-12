@@ -14,7 +14,11 @@ sp = spotipy.Spotify(auth=token)
 
 
 class APISFY():
-    def get_track_info(self, song,artist):
+
+    def __init__(self):
+        pass
+
+    def getTrackfromSpotify(self, song,artist): #busca en spotify
         if token:
             sp.trace = False
             results = sp.search(q='artist:' + artist + ' track:' + song)
@@ -28,9 +32,36 @@ class APISFY():
                     album = track['album']['name']
                     duration = track['duration_ms']
                 objectTrack = Track(id_track,name,artist,album,duration)
-                return objectTrack
-            return ("Can't find the song")
-        return("Can't get token for", token)
+                return objectTrack #regresa el objeto track
+            print ("Can't find the song")
+            return 1
+        print ("Can't get token for", token)
+        return 1
+
+    def getPlaylistfromSpotify():
+        lib = sp.current_user_saved_tracks()
+        return lib
+
+    def mostrarPlaylistDB(self,playlist): #imprimir playlist
+        if len(playlist)<1:
+            print("Nada en tu Playlist")
+            return 1
+        play_String=""
+        i=0
+        for t in playlist:
+            if i==len(playlist)-1:
+                play_String+="{ID: "+str(i)+" "+str(t)+"}"
+            else:
+                play_String+="{ID: "+str(i)+" "+str(t)+"}\n"
+                i=i+1
+        return play_String
+
+#get track from spotify with id
+    def getTrackfromPlaylist(self,playlist,id):
+        if playlist == None or id== None or len(playlist)<1 or id>len(playlist)-1:
+            return 1
+        return playlist[id]
+
 
 
 class DBSFY():
@@ -111,15 +142,15 @@ class DBSFY():
         print ('Error en ejecucion de query')
         return 1
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BORRAR TRACK
-    def deleteTrack(self, name):
+    def deleteTrack(self, id_track):#debe pasarse el id
         try:
-            self.cur.execute("DELETE FROM Track WHERE Name = ?",name)
-            return (0)
+            self.cur.execute("DELETE FROM Track WHERE ID = ?",id_track)
+            return 0
         except:
             return 1
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< MOSTRAR TRACKS
 
-    def mostrarTracks(self):
+    def obtenerPlaylist(self):
         try:
             showTracks = self.cur.execute("SELECT * from Track").fetchall()
             tracks = []
@@ -129,6 +160,47 @@ class DBSFY():
                 i+=1
             if len(tracks)>0:
                 return tracks
-            return "Nada que mostrar"
-        except:
+            print("Nada que mostrar")
             return 1
+        except:
+            print("Error en consulta de playlist")
+            return 1
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< MOSTRAR TRACKS
+
+    def updateBDDfromPlaylist(self,library):
+        #validat library y  verque no se repitan
+        for item in library['items']:
+            song = item['track']
+            #se los manda en el update pero si se repiten
+            iD = song['id']
+            name = song['name']
+            artist = song['artists'][0]['name']
+            album = song['album']['name']
+            duration = song['duration_ms']
+
+            conect = sqlite3.connect('Arma_tu_biblio.db')
+            cursor = conect.cursor()
+                #REVISAR QUE NO SE REPITA AQIO
+            cursor.execute("INSERT INTO Track VALUES"
+                           "('{}','{}','{}','{}','{}')".format(iD, name, artist, album, duration))
+
+            #conect.commit()
+            conect.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# <<
