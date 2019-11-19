@@ -6,7 +6,9 @@ import mock
 from mock import patch
 from SPYClass import APISFY
 from SPYClass import DBSFY
+from SPYClass import sinchronize
 import sqlite3
+
 
 
 #***********************************************************************************************************************************************************
@@ -16,11 +18,11 @@ import sqlite3
 class testSpotipy(unittest.TestCase):
     #ahique vaciar la biblioteca en cada ejecucion
 
-    def test_getPlaylistfromSpotify(self):
-        play=[]
-        a=APISFY()
-        play=a.getPlaylistfromSpotify()
-        print(play)
+    # def test_getPlaylistfromSpotify(self):
+    #     play=[]
+    #     a=APISFY()
+    #     play=a.getPlaylistfromSpotify()
+    #     print(play)
 
     # def test_getTrackfromSpotify(self):
     #     # # CASO DE PRUEBA: cancion y artist correctos***************************** <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST CASE
@@ -528,6 +530,25 @@ class testSpotipy(unittest.TestCase):
     #     showTracks = obj.mostrarTracks()
     #     print(showTracks)
     #
+
+
+#***********************************************************************************************************************************************************
+#*          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRUEAS UNITARIAS A CLASE SINCHRONIZE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                    *
+#***********************************************************************************************************************************************************
+
+    def test_checkBDDvsSpotify(self):
+        id_prueba1='58MZs0B5Amxl0Mwc9FIRZc'
+        id_prueba2='64Mgiyn0JSji95v7QEOv4U'
+        a=APISFY()
+        s=sinchronize()
+        #d=DBSFY("./../Arma_tu_biblio.db")
+        #idsSp=a.getPlaylistfromSpotify()
+        idsSp=[id_prueba1,id_prueba2]#d.getPlaylistFromDB()
+        idsBDD=[id_prueba1,id_prueba2]
+        print (idsBDD)
+        print(idsSp)
+        print(s.checkBDDvsSpotify(idsSp,idsBDD))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -59,12 +59,12 @@ class APISFY():
         print ("Can't get token for", token)
         return 1
 
-    def getPlaylistfromSpotify(self): #obtener mi playlist desde spotify
+    def getPlaylistfromSpotify(self): #obtener mi playlist desde spotify, devuelve ids
         lib = self.sp.current_user_saved_tracks()
+        playlistids=[]
         for track in lib['items']:
-            print(track)
-            print()
-        return lib
+            playlistids.append((track['track']['id']))
+        return playlistids
 
     def printPlaylist(self,playlist): #imprimir playlist desde la bdd
         if len(playlist)<1:
@@ -237,54 +237,60 @@ class sinchronize():
     def __init__(self):
         pass
 
-        def updateBDDfromSpotify(self,librarySpotify,objBDD):
-            #validat library y  verque no se repitan
-            for item in librarySpotify['items']:
-                song = item['track']
-                #se los manda en el update pero si se repiten
-                iD = song['id']
-                name = song['name']
-                artist = song['artists'][0]['name']
-                album = song['album']['name']
-                duration = song['duration_ms']
+    def updateBDDfromSpotify(self,librarySpotify,objBDD):
+        #validat library y  verque no se repitan
+        for item in librarySpotify['items']:
+            song = item['track']
+            #se los manda en el update pero si se repiten
+            iD = song['id']
+            name = song['name']
+            artist = song['artists'][0]['name']
+            album = song['album']['name']
+            duration = song['duration_ms']
 
-                # conect = sqlite3.connect('Arma_tu_biblio.db') objBDD afuera
-                cursor = objBDD.cursor()
-                    #REVISAR QUE NO SE REPITA AQIO
+            # conect = sqlite3.connect('Arma_tu_biblio.db') objBDD afuera
+            cursor = objBDD.cursor()
+                #REVISAR QUE NO SE REPITA AQIO
 
-                try:
-                    cursor.execute("INSERT INTO Track VALUES ('{}','{}','{}','{}','{}')".format(iD, name, artist, album, duration))
-                    conect.commit()
-                    conect.close()
-                except:
-                    print("Error in updateBDDfromSpotify")
-
-
-        def updateSpotifyfromBDD(self,librarySpotify,libraryBDD):
-            #validat library y  verque no se repitan
-            for item in library['items']:
-                song = item['track']
-                #se los manda en el update pero si se repiten
-                iD = song['id']
-                name = song['name']
-                artist = song['artists'][0]['name']
-                album = song['album']['name']
-                duration = song['duration_ms']
-
-                conect = sqlite3.connect('Arma_tu_biblio.db')
-                cursor = conect.cursor()
-                    #REVISAR QUE NO SE REPITA AQIO
-                cursor.execute("INSERT INTO Track VALUES"
-                               "('{}','{}','{}','{}','{}')".format(iD, name, artist, album, duration))
-
+            try:
+                cursor.execute("INSERT INTO Track VALUES ('{}','{}','{}','{}','{}')".format(iD, name, artist, album, duration))
                 conect.commit()
                 conect.close()
+            except:
+                print("Error in updateBDDfromSpotify")
 
 
-        def checkBDDvsSpotify(self, librarySpotify,objBDD):
-            #PRIMERO TRAETE LA Libreria DE Spotify
-            #DESPUES LA libreria DE LA BASE DE DATOS
-            #COMPARA QUE ESTEN IGUALES
-            #SI NO ESTAN IGUALES BORRAS LA BDD
-            #Y PONES LO DE LA PLAYLIST DE SPOTIFY
-            pass
+    def updateSpotifyfromBDD(self,librarySpotify,libraryBDD):
+        #validat library y  verque no se repitan
+        for item in library['items']:
+            song = item['track']
+            #se los manda en el update pero si se repiten
+            iD = song['id']
+            name = song['name']
+            artist = song['artists'][0]['name']
+            album = song['album']['name']
+            duration = song['duration_ms']
+
+            conect = sqlite3.connect('Arma_tu_biblio.db')
+            cursor = conect.cursor()
+                #REVISAR QUE NO SE REPITA AQIO
+            cursor.execute("INSERT INTO Track VALUES"
+                           "('{}','{}','{}','{}','{}')".format(iD, name, artist, album, duration))
+
+            conect.commit()
+            conect.close()
+
+    def checkBDDvsSpotify(self, idsSpotify,idsBDD):#lo que este en bdd y no en spotipy se sube y luego se borre y se baja
+        #PRIMERO TRAETE LA Libreria DE Spotify
+        #DESPUES LA libreria DE LA BASE DE DATOS
+        #COMPARA QUE ESTEN IGUALES
+        #SI NO ESTAN IGUALES BORRAS LA BDD
+        #Y PONES LO DE LA PLAYLIST DE SPOTIFY
+        tracks_diff=[]
+        for id in idsBDD:
+            if id not in idsSpotify:
+                tracks_diff.append(id)
+        if len(tracks_diff)>0:
+            return tracks_diff
+        return 1
+        #for item in idsSpotify:
