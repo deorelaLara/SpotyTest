@@ -6,31 +6,13 @@ from Track import Track
 
 
 
-def Leer_Credenciales(ruta):
-    archivo = open(ruta, 'r')
-    credenciales = []
-    for linea in archivo:
-        cadena = ''
-        espacio = 0
-        texto = str(linea).strip()
-        for i in range(0,len(texto)):
-            if texto[i] == ' ':
-                espacio +=1
-            if espacio == 1 and texto[i] != ' ':
-                cadena += texto[i]
-
-        credenciales.append(cadena)
-    archivo.close()
-    return credenciales
-
-
 
 
 
 class APISFY():
     sp=None
-    def __init__(self):
-        credentials=Leer_Credenciales("credenciales.txt")
+    def __init__(self,accesFile):
+        credentials=self.readCredentials(accessFile)
         token = util.prompt_for_user_token(
             username=credentials[0],
             scope=credentials[3],
@@ -38,6 +20,31 @@ class APISFY():
             client_secret=credentials[2],
             redirect_uri=credentials[4])
         self.sp = spotipy.Spotify(auth=token)
+
+    def readCredentials(ruta):
+        archivo = open(ruta, 'r')
+        credenciales = []
+        for linea in archivo:
+            cadena = ''
+            espacio = 0
+            texto = str(linea).strip()
+            for i in range(0,len(texto)):
+                if texto[i] == ' ':
+                    espacio +=1
+                if espacio == 1 and texto[i] != ' ':
+                    cadena += texto[i]
+
+            credenciales.append(cadena)
+        archivo.close()
+        return credenciales
+
+    def saveTrack(self,idtrackList):
+        self.sp.current_user_saved_tracks_add(list_tracks)  # Guarda en biblioteca
+        if (dbsfy.saveTrack(track))!=1: #Guarda archivo en DB
+            print('La canción ha sido agregada' + '\n')
+            return 0
+        print("Error guardando en tu spotify")
+        return 1
 
     def getTrackfromSpotify(self, song,artist): #busca en spotify
         if token:
@@ -59,12 +66,24 @@ class APISFY():
         print ("Can't get token for", token)
         return 1
 
-    def getPlaylistfromSpotify(self): #obtener mi playlist desde spotify, devuelve ids
+    def getPlaylistsIDSfromSpotify(self): #obtener mi playlist desde spotify, devuelve ids
         lib = self.sp.current_user_saved_tracks()
         playlistids=[]
         for track in lib['items']:
             playlistids.append((track['track']['id']))
         return playlistids
+
+    def getTrackslistfromSpotify(self): #obtener mi playlist desde spotify, devuelve obj tracks
+        lib = self.sp.current_user_saved_tracks()
+        playlist=[]
+        for track in lib['items']:
+            id_track = track['id']
+            name = track['name']
+            artist = track['artists'][0]['name']
+            album = track['album']['name']
+            duration = track['duration_ms']
+            playlist.append(Track(id_track,name,artist,album,duration))
+        return playlist
 
     def printPlaylist(self,playlist): #imprimir playlist desde la bdd
         if len(playlist)<1:
@@ -85,6 +104,13 @@ class APISFY():
         if playlist == None or id== None or len(playlist)<1 or id>len(playlist)-1:
             return 1
         return playlist[id]
+
+    def deleteTrack(self,ids):
+        if self.sp.current_user_saved_tracks_delete(ids):
+            print("Track Eliminado")
+            return 0
+        return 1
+
 #
 #
 #
@@ -187,6 +213,18 @@ class DBSFY():# ////////////////////////////////////////////////////////////////
             return 0
         except:
             return 1
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BORRAR TRACKS
+    def deleteAllTracks(self):#debe pasarse el id
+        try:
+            conect = sqlite3.connect('Arma_tu_biblio.db')
+            cursor = conect.cursor()
+            cursor.execute("DELETE FROM Track")
+            conect.commit()
+            conect.close()
+            return 0
+        except:
+            return 1
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< MOSTRAR TRACKS
 
     def getPlaylistFromDB(self):
@@ -209,6 +247,11 @@ class DBSFY():# ////////////////////////////////////////////////////////////////
             print("Error en consulta de playlist")
             return 1
 
+    def getIDSFromDB(self,playlist):
+        ids=[]
+        for id in playlist:
+            ids.append(id.id)
+        return ids
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< MOSTRAR TRACKS
 
@@ -247,45 +290,25 @@ class sinchronize():
             artist = song['artists'][0]['name']
             album = song['album']['name']
             duration = song['duration_ms']
-
-            # conect = sqlite3.connect('Arma_tu_biblio.db') objBDD afuera
-            cursor = objBDD.cursor()
-                #REVISAR QUE NO SE REPITA AQIO
-
-            try:
+             try:
+                cursor = objBDD.cursor()
                 cursor.execute("INSERT INTO Track VALUES ('{}','{}','{}','{}','{}')".format(iD, name, artist, album, duration))
                 conect.commit()
                 conect.close()
+                print("updateBDDfromSpotify OK")
+                return 0
             except:
                 print("Error in updateBDDfromSpotify")
 
 
-    def updateSpotifyfromBDD(self,librarySpotify,libraryBDD):
+    def updateSpotifyfromBDD(self,SPYFIOBJ,libraryBDD):
         #validat library y  verque no se repitan
-        for item in library['items']:
-            song = item['track']
-            #se los manda en el update pero si se repiten
-            iD = song['id']
-            name = song['name']
-            artist = song['artists'][0]['name']
-            album = song['album']['name']
-            duration = song['duration_ms']
+        if SPYFIOBJ.saveTrack(libraryBDD):
+            print("updateSpotifyfromBDD OK")
+            return 0
+        return 1
 
-            conect = sqlite3.connect('Arma_tu_biblio.db')
-            cursor = conect.cursor()
-                #REVISAR QUE NO SE REPITA AQIO
-            cursor.execute("INSERT INTO Track VALUES"
-                           "('{}','{}','{}','{}','{}')".format(iD, name, artist, album, duration))
-
-            conect.commit()
-            conect.close()
-
-    def checkBDDvsSpotify(self, idsSpotify,idsBDD):#lo que este en bdd y no en spotipy se sube y luego se borre y se baja
-        #PRIMERO TRAETE LA Libreria DE Spotify
-        #DESPUES LA libreria DE LA BASE DE DATOS
-        #COMPARA QUE ESTEN IGUALES
-        #SI NO ESTAN IGUALES BORRAS LA BDD
-        #Y PONES LO DE LA PLAYLIST DE SPOTIFY
+    def checkBDDvsSpotify(self, idsSpotify,idsBDD):
         tracks_diff=[]
         for id in idsBDD:
             if id not in idsSpotify:
@@ -293,4 +316,3 @@ class sinchronize():
         if len(tracks_diff)>0:
             return tracks_diff
         return 1
-        #for item in idsSpotify:
