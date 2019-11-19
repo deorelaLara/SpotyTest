@@ -6,6 +6,10 @@ from spotipy import util
 import sys
 import sqlite3
 
+
+apisfy = APISFY()
+dbsfy =  DBSFY('Arma_tu_biblio.db')
+
 token = util.prompt_for_user_token( #**************************
     username='akralma',
     scope='user-library-modify user-library-read',
@@ -16,11 +20,11 @@ token = util.prompt_for_user_token( #**************************
 sp = spotipy.Spotify(auth=token)
 
 #Devuelve informacion del track
-def search_info(apisfy): #***************************************
+def search_info(): #***************************************
     song = input("Como se llama la rola: ")                    #*
     artist = input('¿Quien la canta?: ')                       #+
 
-    info = apisfy.get_track_info(song, artist)                 #*
+    info = apisfy.getTrackfromSpotify(song, artist)                 #*
     if song:                                   #no esto nooo
         print(info)
         return info                                             #*
@@ -30,9 +34,9 @@ def search_info(apisfy): #***************************************
  #Guarda info en DB #*****************************
 
 def main():
-    apisfy = APISFY()
-    dbsfy =  DBSFY('Arma_tu_biblio.db')
+    list_tracks=[]
     library = sp.current_user_saved_tracks()
+
     print('Bienvenido akralma, ¿Que quieres hacer?') #cambiar esa chingadera de abrakadabra
     cont = False
     while True:
@@ -44,25 +48,25 @@ def main():
                            '5. Migrar Datos' + '\n'))
         if option == 1:
 
-            track = search_info(APISFY)
+            track = search_info()
             print('¿Quieres agregar esta cancion a tu biblioteca?')
             save = int(input('1. Si' + '\n' + '2. No' + '\n'))
 
             if save == 1:
                 list_tracks.append(track.id)
                 sp.current_user_saved_tracks_add(list_tracks)  # Guarda en biblioteca
-
-                save_track(dbsfy, library) #Guarda archivo en DB
-                print('La canción ha sido agregada' + '\n')
+                if (dbsfy.saveTrack(track))!=1: #Guarda archivo en DB
+                    print('La canción ha sido agregada' + '\n')
+                #si guarda que revise
             elif save == 2:
                 print(option)
 
         elif option == 2:
-            show_track(dbsfy)
+            dbsfy.showTrack()##cambiar esto no es aqui
 
         elif option ==3:
             name = input('¿Cual cancion quieres eliminar?: ' + '\n')
-            del_track(dbsfy, name)
+            dbsfy.del_track(name)
 
             print('¿Quieres seguir eliminando?' + '\n')
             stop = int(input('1.Si ' + '2. No' + '\n'))

@@ -1,21 +1,27 @@
-primero revisa si estan sincronizado los Datos
+  primero revisa si estan sincronizado los Datos
 
 1 traer tracks de spotify
 
-  si no tiene Datos en spotify{
+  si no tiene Datos en spotify
+    {
 
-    revisar si tienes 
+    revisar si tienes datos en base de datos:
 
-      no agregues nada
+        si tienes datos traetelos a spotify
+
+
+        si no no hagas nada
     }
-    si tiene Datos
-      vacias los datos de spotify en labase
 
 
-    si notiene datos
 
+  si tiene Datos en Spotify
+    {
+     revisar si tienes datos en la base de datos:
 
-  si tiene Datos
+        si
+
+    }
 
 
 
@@ -23,6 +29,8 @@ primero revisa si estan sincronizado los Datos
 #################################
 2 traer datos de base de Datos
 3 compararlos
+
+
 
 
 
